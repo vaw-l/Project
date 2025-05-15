@@ -37,12 +37,46 @@ login_or_signup() {
 
 # Manages CV file uploads,  Raghad Alzahrani ID: 445000460
 upload_cv() {
+   # Prompt the user to enter the path of the CV file
+    read -p "Enter CV file path (.txt): " file
+    echo "You entered: $file"  # Display the entered file path for confirmation
 
+    # Check if the specified file exists
+    if [ -f "$file" ]; then
+        # Copy the CV file to the cv_storage directory
+        cp "$file" cv_storage/
+        echo "CV uploaded successfully."  # Confirm successful upload
+    else
+        # Inform the user if the file was not found
+        echo "File not found. Please check the path and try again."
+    fi
 }
 
 # Analyzes and categorizes CVs based on keywords
 analyze_and_sort() {
+ for cv in cv_storage/*; do
+        content=$(cat "$cv")  # Read the content of the CV
+        matched=0  # Initialize a flag to track if a match is found
 
+        # Loop over each line in keywords.txt, where each line is in the format "category:keyword1 keyword2"
+        while IFS=: read -r category words; do
+            # Split the keywords into individual words
+            for word in $words; do
+                # Check if the content of the CV contains the keyword (case-insensitive)
+                if echo "$content" | grep -iq "$word"; then
+                    # Move the CV to the corresponding category folder
+                    cp "$cv" "categorized/$category/"
+                    echo "$(basename "$cv") -> $category"  # Print the categorization result
+                    matched=1  # Set the flag indicating a match was found
+                    break  # Exit the keyword loop since a match was found
+                fi
+            done
+            [ $matched -eq 1 ] && break  # Exit the category loop if a match was found
+        done
+        
+        # If no match was found, print a message indicating the CV was not categorized
+        [ $matched -eq 0 ] && echo "$(basename "$cv") not categorized."
+    done
 }
 
 # Shows how many CVs are in each category, Jenan Bajawi ID: 445000496
