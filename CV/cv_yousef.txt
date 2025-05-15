@@ -1,0 +1,5 @@
+
+Yousef Marei
+Email: yousef@example.com
+Skills: SQL, Data Cleaning, Python
+Experience: 3 years data engineer

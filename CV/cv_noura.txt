@@ -1,0 +1,5 @@
+
+Noura Ibrahim
+Email: noura@example.com
+Skills: Java, Bash, Git, Software Testing
+Experience: 2 years fullstack developer

@@ -1,0 +1,5 @@
+
+Ahmed Hassan
+Email: ahmed@example.com
+Skills: Python, Java, SQL
+Experience: 3 years backend development

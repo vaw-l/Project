@@ -1,0 +1,5 @@
+programming: Python Java JavaScript C++ Bash
+design: Photoshop Illustrator Figma UI UX
+management: Leadership Agile Scrum Planning
+data: SQL Excel Pandas DataAnalysis
+marketing: SEO Branding Campaign Ads

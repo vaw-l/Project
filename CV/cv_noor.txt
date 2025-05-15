@@ -1,0 +1,5 @@
+
+Noor Sami
+Email: noor@example.com
+Skills: HTML, CSS, JavaScript, Bash
+Experience: 2 years frontend development

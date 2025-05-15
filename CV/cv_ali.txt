@@ -1,0 +1,5 @@
+
+Ali Basem
+Email: ali@example.com
+Skills: JavaScript, React, Node.js
+Experience: Full stack developer 4 years
