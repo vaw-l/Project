@@ -125,10 +125,53 @@ view_cv_content() {
 } 
 # Shows available options, Salam Alghamdi ID: 445003110
 show_menu() {
+  echo "========== CV Management System =========="
+    echo "1. Upload CV"
+    echo "2. Analyze and Sort CVs"
+    echo "3. Show CV Counts per Category"
+    echo "4. Search for a Keyword in CVs"
+    echo "5. View Specific CV Content"
+    echo "6. Exit"
+    echo "=========================================="
 
 }
 
 # Controls the overall flow
 main() {
+    setup_environment          # Ensure necessary folders and files exist
+    login_or_signup            # Handle user login or signup
 
+    while true; do             # Infinite loop until user chooses to exit
+        show_menu              # Display the menu options
+        read -p "Choose an option [1-6]: " choice
+
+        case $choice in
+            1)
+                upload_cv      # Call function to upload a CV
+                ;;
+            2)
+                analyze_and_sort  # Analyze CVs and move them to category folders
+                ;;
+            3)
+                show_cv_counts    # Display how many CVs are in each category
+                ;;
+            4)
+                search_keyword    # Search for a keyword across all categorized CVs
+                ;;
+            5)
+                view_cv_content   # Show the contents of a specific CV
+                ;;
+            6)
+                echo "Goodbye!"   # Exit the script
+                exit 0
+                ;;
+            *)
+                echo "Invalid option. Please choose between 1 and 6."
+                ;;
+        esac
+        echo                    # Print an empty line for spacing
+    done
 }
+
+# Run the main function to start the program
+main
