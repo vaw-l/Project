@@ -79,21 +79,50 @@ analyze_and_sort() {
     done
 }
 
-# Shows how many CVs are in each category, Jenan Bajawi ID: 445000496
+# Display the number of CVs in each category, Jenan Bajawi ID: 445000496
 show_cv_counts() {
 
+    # Loop through each subfolder inside the 'categorized' directory
+    for folder in categorized/*; do
+        # Count how many files (CVs) are inside the current folder
+        count=$(ls "$folder" 2>/dev/null | wc -l)
+
+   # Print the folder name (category) and the number of CVs it contains
+        echo "$(basename "$folder"): $count"
+    done
 }
+
 
 # Searches all CVs for a specific word
 search_keyword() {
+# Prompt the user to enter a word to search for
+    read -p "Enter word to search: " word
+
+# Use grep to search for the word in all files inside 'categorized/' folders
+    # -r: recursive search
+    # -i: ignore case
+    # -l: only show filenames
+    grep -ril "$word" categorized/ || echo "No matches found."
 
 }
 
-# Displays the contents of stored CV files for review
+
+# View the content of a specific CV file
 view_cv_content() {
+# Ask the user to enter the CV file name
+    read -p "Enter CV file name (e.g. cv_fileName.txt): " name
 
+    # Search for the file inside categorized folders
+    file=$(find categorized/ -type f -name "$name" 2>/dev/null)
+
+    # If the file is found
+    if [ -n "$file" ]; then
+        echo "=== Content of $name ==="
+        cat "$file"  # Display the content of the file
+    else
+        echo "CV not found."  # Show a message if the file doesn't exist
+    fi
 } 
-
 # Shows available options, Salam Alghamdi ID: 445003110
 show_menu() {
 
