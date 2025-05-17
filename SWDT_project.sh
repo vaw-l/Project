@@ -1,9 +1,9 @@
-#!/bin/bash
+ #!/bin/bash
 
 # Creates necessary folders and files when the script starts,   Linda Alzahrani ID: 445004868
 setup_environment() {
  # Create main storage folder and subfolders for each category
-    mkdir -p cv_storage categorized/{programming,design,management,data,marketing}
+   mkdir -p cv_storage categorized/{programming,design,management,data,marketing}
     
     # Create essential text files for storing data
     touch logins.txt keywords.txt 
@@ -54,6 +54,7 @@ upload_cv() {
 
 # Analyzes and categorizes CVs based on keywords
 analyze_and_sort() {
+ 
 for cv in cv_storage/*; do
     content=$(cat "$cv")  # Read the content of the CV
     matched=0  # Initialize a flag to track if a match is found
@@ -70,8 +71,31 @@ for cv in cv_storage/*; do
                 matched=1  # Set the flag indicating a match was found
                 break  # Exit the keyword loop since a match was found
             fi
-        done
-        [ $matched -eq 1 ] && break  # Exit the category loop if a match was found
+        do         [ $matched -eq 1 ] && break  # Exit the category loop if a match was found
+=======
+   for cv in cv_storage/*; do
+        # Read content and remove punctuation
+        content=$(cat "$cv" | tr -d '[:punct:]')
+        matched=0  # Flag to check if CV matched any category
+
+        # Read keywords from the file
+        while IFS=: read -r category words; do
+            for word in $words; do
+                # Check if the word exists in the content (case-insensitive)
+                if echo "$content" | grep -iqw "$word"; then
+                    # Copy CV to matching category folder
+                    cp "$cv" "categorized/$category/"
+                    # Print result
+                    echo "$(basename "$cv") -> $category"
+                    matched=1
+                    break
+                fi
+            done
+            [ $matched -eq 1 ] && break  # Stop if match found
+        done < keywords.txt
+
+        # Print if no category matched
+        [ $matched -eq 0 ] && echo "$(basename "$cv") not categorized."
     done
     
     # If no match was found, print a message
@@ -93,34 +117,43 @@ show_cv_counts() {
 }
 
 
-# Searches all CVs for a specific word
+# This function asks the user to enter a word, then it searches through all the CV files
+# inside the categorized folders to find files that contain that word.
+# It prints the names of all files where the word is found.
 search_keyword() {
-# Prompt the user to enter a word to search for
     read -p "Enter word to search: " word
+    echo "[Search] Searching for \"$word\" in categorized CVs..."
 
-# Use grep to search for the word in all files inside 'categorized/' folders
-    # -r: recursive search
-    # -i: ignore case
-    # -l: only show filenames
-    grep -ril "$word" categorized/ || echo "No matches found."
-
+    # Use grep to find the word recursively inside the 'categorized' directory
+    results=$(grep -ril "$word" categorized/)
+    if [ -n "$results" ]; then
+        echo "[Search] Files containing '$word':"
+        # Print the file name (with extension) for each match
+        echo "$results" | while read -r file; do
+            echo "$(basename "$file")"
+        done
+    else
+        # If no files contain the word
+        echo "[Search] No matches found."
+    fi
 }
 
-
-# View the content of a specific CV file
+# This function lets the user view the content of a specific CV.
+# It asks for the file name, then searches for it inside the categorized folders.
+# If the file exists, it prints its content. If not, it shows an error message.
 view_cv_content() {
-# Ask the user to enter the CV file name
     read -p "Enter CV file name (e.g. cv_fileName.txt): " name
 
-    # Search for the file inside categorized folders
+    # Search for the file in all subfolders under 'categorized'
     file=$(find categorized/ -type f -name "$name" 2>/dev/null)
 
-    # If the file is found
     if [ -n "$file" ]; then
         echo "=== Content of $name ==="
-        cat "$file"  # Display the content of the file
+        # Display the content of the found file
+        cat "$file"
     else
-        echo "CV not found."  # Show a message if the file doesn't exist
+        # If file not found, show this message
+        echo "[View] CV not found."
     fi
 } 
 # Shows available options, Salam Alghamdi ID: 445003110
