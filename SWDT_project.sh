@@ -54,21 +54,29 @@ upload_cv() {
 
 # Analyzes and categorizes CVs based on keywords
 analyze_and_sort() {
-# Read each line from keywords.txt
+for cv in cv_storage/*; do
+    content=$(cat "$cv")  # Read the content of the CV
+    matched=0  # Initialize a flag to track if a match is found
+
+    # Loop over each line in keywords.txt
     while IFS=: read -r category words; do
+        # Split the keywords into individual words
         for word in $words; do
-            # Check if the word is in the content (ignore case)
-            if echo "$content" | grep -iqw "$word"; then
-                cp "$cv" "categorized/$category/"  # Copy file to category folder
-                echo "$(basename "$cv") -> $category"  # Show file and category
-                matched=1
-                break
+            # Check if the content of the CV contains the keyword
+            if echo "$content" | grep -iq "$word"; then
+                # Move the CV to the corresponding category folder
+                cp "$cv" "categorized/$category/"
+                echo "$(basename "$cv") -> $category"  # Print the categorization result
+                matched=1  # Set the flag indicating a match was found
+                break  # Exit the keyword loop since a match was found
             fi
         done
-        [ $matched -eq 1 ] && break  # Stop if matched
-    done < keywords.txt  # Read keywords file
-
-    [ $matched -eq 0 ] && echo "$(basename "$cv") not categorized."  # No category found
+        [ $matched -eq 1 ] && break  # Exit the category loop if a match was found
+    done
+    
+    # If no match was found, print a message
+    [ $matched -eq 0 ] && echo "$(basename "$cv") not categorized."
+done
 }
 
 # Display the number of CVs in each category, Jenan Bajawi ID: 445000496
