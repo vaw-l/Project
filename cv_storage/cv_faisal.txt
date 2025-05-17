@@ -1,0 +1,5 @@
+
+Faisal Omar
+Email: faisal@example.com
+Skills: Python, Git, Bash
+Experience: DevOps intern with 1 year experience

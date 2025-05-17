@@ -1,0 +1,5 @@
+
+Laila Ahmed
+Email: laila@example.com
+Skills: Excel, Pandas, Data Analysis
+Experience: 4 years data analysis
