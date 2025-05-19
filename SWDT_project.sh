@@ -54,53 +54,30 @@ upload_cv() {
 
 # Analyzes and categorizes CVs based on keywords
 analyze_and_sort() {
- 
-for cv in cv_storage/*; do
-    content=$(cat "$cv")  # Read the content of the CV
-    matched=0  # Initialize a flag to track if a match is found
-
-    # Loop over each line in keywords.txt
-    while IFS=: read -r category words; do
-        # Split the keywords into individual words
-        for word in $words; do
-            # Check if the content of the CV contains the keyword
-            if echo "$content" | grep -iq "$word"; then
-                # Move the CV to the corresponding category folder
-                cp "$cv" "categorized/$category/"
-                echo "$(basename "$cv") -> $category"  # Print the categorization result
-                matched=1  # Set the flag indicating a match was found
-                break  # Exit the keyword loop since a match was found
-            fi
-        do         [ $matched -eq 1 ] && break  # Exit the category loop if a match was found
-=======
-   for cv in cv_storage/*; do
-        # Read content and remove punctuation
+  for cv in cv_storage/*; do
+        # Read the content of the CV and remove any punctuation marks
         content=$(cat "$cv" | tr -d '[:punct:]')
-        matched=0  # Flag to check if CV matched any category
+        matched=0  # A flag to know if the CV was matched to a category
 
-        # Read keywords from the file
+        # Read each line in keywords.txt file where each line contains a category and its keywords
         while IFS=: read -r category words; do
             for word in $words; do
-                # Check if the word exists in the content (case-insensitive)
+                # Check if the word exists in the CV content (case-insensitive, whole word)
                 if echo "$content" | grep -iqw "$word"; then
-                    # Copy CV to matching category folder
+                    # If matched, copy the CV to the matching category folder
                     cp "$cv" "categorized/$category/"
-                    # Print result
+                    # Print a message showing the file name and its matched category
                     echo "$(basename "$cv") -> $category"
                     matched=1
-                    break
+                    break  # Stop checking other keywords once a match is found
                 fi
             done
-            [ $matched -eq 1 ] && break  # Stop if match found
+            [ $matched -eq 1 ] && break  # Exit the loop if already matched
         done < keywords.txt
 
-        # Print if no category matched
+        # If no category was matched, print a message
         [ $matched -eq 0 ] && echo "$(basename "$cv") not categorized."
     done
-    
-    # If no match was found, print a message
-    [ $matched -eq 0 ] && echo "$(basename "$cv") not categorized."
-done
 }
 
 # Display the number of CVs in each category, Jenan Bajawi ID: 445000496
